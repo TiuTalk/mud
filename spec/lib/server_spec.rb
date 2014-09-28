@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Server do
   let(:server) { Server.new('0.0.0.0', '5000') }
 
-  describe '.start' do
+  describe '#start' do
     before do
       @server = Thread.new do
         server.start
@@ -20,6 +20,13 @@ RSpec.describe Server do
 
     it 'accept connections' do
       expect(socket).to_not be_closed
+    end
+  end
+
+  describe '#output' do
+    it 'send the message to the STDOUT' do
+      expect($stdout).to receive(:puts).with(/Client connected/)
+      server.output('Client connected')
     end
   end
 end

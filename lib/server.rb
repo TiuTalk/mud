@@ -1,22 +1,28 @@
 class Server
+  attr_accessor :host, :port
+
   def initialize(host = nil, port = nil)
-    @host = host || '0.0.0.0'
-    @port = port || 4000
+    self.host = host || '0.0.0.0'
+    self.port = port || 4000
   end
 
   def start
-    puts "Starting MUD server on #{@host}, port #{@port}"
-    Socket.tcp_server_loop(@host, @port) do |socket, client_addrinfo|
+    output("Starting MUD server on #{host}, port #{port}")
+    Socket.tcp_server_loop(host, port) do |socket, client_addrinfo|
       handle_client_connection(socket, client_addrinfo)
     end
+  end
+
+  def output(string)
+    puts(string)
   end
 
   private
 
   def handle_client_connection(socket, client_addrinfo)
-    puts "Client connected: #{client_addrinfo.ip_address}"
-
-    client = Client.new(socket, client_addrinfo)
-    cilent.start
+    Thread.new do
+      client = Client.new(self, socket, client_addrinfo)
+      client.connect
+    end
   end
 end

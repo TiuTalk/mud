@@ -1,14 +1,18 @@
 class Client
-  def initialize(socket, client_addrinfo)
-    @socket = socket
-    @client_addrinfo = client_addrinfo
+  attr_accessor :server, :socket, :addrinfo
+
+  def initialize(server, socket, addrinfo)
+    self.server = server
+    self.socket = socket
+    self.addrinfo = addrinfo
   end
 
-  def start
-    output('Welcome!')
+  def connect
+    server.output("Client connected: #{self.inspect}")
+    output("Welcome to server #{server.inspect}")
   end
 
   def output(string)
-    @socket.put(string)
+    socket.puts(string)
   end
 end
